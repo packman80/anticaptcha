@@ -114,6 +114,7 @@ func (a *WhiteCaptcha) solveTask(ctx context.Context, settings *Settings, task m
 }
 
 func (a *WhiteCaptcha) createTask(ctx context.Context, settings *Settings, task map[string]any) (string, error) {
+	task["json"] = 1
 	jsonValue, err := json.Marshal(task)
 	if err != nil {
 		return "", err
