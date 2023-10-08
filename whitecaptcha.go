@@ -114,6 +114,7 @@ func (a *WhiteCaptcha) solveTask(ctx context.Context, settings *Settings, task m
 }
 
 func (a *WhiteCaptcha) createTask(ctx context.Context, settings *Settings, task map[string]any) (string, error) {
+	task["key"] = a.apiKey
 	task["json"] = 1
 	jsonValue, err := json.Marshal(task)
 	if err != nil {
@@ -150,7 +151,7 @@ func (a *WhiteCaptcha) createTask(ctx context.Context, settings *Settings, task 
 }
 
 func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
-	resultData := map[string]string{"clientKey": a.apiKey, "taskId": taskId}
+	resultData := map[string]any{"key": a.apiKey, "id": taskId, "json": 1}
 	jsonValue, err := json.Marshal(resultData)
 	if err != nil {
 		return "", err
