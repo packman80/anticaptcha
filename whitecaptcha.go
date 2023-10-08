@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/packman80/anticaptcha/internal"
 )
@@ -151,13 +152,14 @@ func (a *WhiteCaptcha) createTask(ctx context.Context, settings *Settings, task 
 }
 
 func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
-	resultData := map[string]any{"key": a.apiKey, "id": taskId, "json": 1}
-	jsonValue, err := json.Marshal(resultData)
-	if err != nil {
-		return "", err
-	}
+	body := &url.Values{}
+	body.Set("key", a.apiKey)
+	body.Set("json", "1")
+	body.Set("id", taskId)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, a.baseUrl+"/res.php", bytes.NewBuffer(jsonValue))
+	fullURL := fmt.Sprintf("%v/res.php?%v", a.baseUrl, body.Encode())
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fullURL, nil)
 	if err != nil {
 		return "", err
 	}
@@ -190,47 +192,7 @@ func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, ta
 }
 
 func (a *WhiteCaptcha) report(path, taskId string, settings *Settings) func(ctx context.Context) error {
-	type response struct {
-		ErrorID          int64  `json:"errorId"`
-		ErrorCode        string `json:"errorCode"`
-		ErrorDescription string `json:"errorDescription"`
-	}
-
 	return func(ctx context.Context) error {
-		payload := map[string]string{
-			"clientKey": a.apiKey,
-			"taskId":    taskId,
-		}
-		rawPayload, err := json.Marshal(payload)
-		if err != nil {
-			return err
-		}
-
-		req, err := http.NewRequestWithContext(ctx, http.MethodPost, a.baseUrl+path, bytes.NewBuffer(rawPayload))
-		if err != nil {
-			return err
-		}
-
-		resp, err := settings.client.Do(req)
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-
-		respBody, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-
-		var respJson response
-		if err := json.Unmarshal(respBody, &respJson); err != nil {
-			return err
-		}
-
-		if respJson.ErrorID != 0 {
-			return fmt.Errorf("%v: %v", respJson.ErrorCode, respJson.ErrorDescription)
-		}
-
 		return nil
 	}
 }
