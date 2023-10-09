@@ -182,7 +182,7 @@ func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, ta
 			return "", nil
 		}
 
-		return "", fmt.Errorf("%v: %v", respJson.Request, respJson.ErrorText)
+		return "", fmt.Errorf("%v", respJson.Request)
 	}
 	return respJson.Request, nil
 }
