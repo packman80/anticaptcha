@@ -51,9 +51,6 @@ func (a *WhiteCaptcha) SolveImageCaptcha(ctx context.Context, settings *Settings
 	if err != nil {
 		return nil, err
 	}
-
-	result.reportBad = a.report("/reportIncorrectImageCaptcha", result.taskId, settings)
-	result.reportGood = a.report("/reportCorrectRecaptcha", result.taskId, settings)
 	return result, nil
 }
 
@@ -191,10 +188,27 @@ func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, ta
 	return respJson.Request, nil
 }
 
-func (a *WhiteCaptcha) report(path, taskId string, settings *Settings) func(ctx context.Context) error {
-	return func(ctx context.Context) error {
-		return nil
+func (t *WhiteCaptcha) Report(ctx context.Context, action, taskId string, settings *Settings) error {
+	body := url.Values{}
+	body.Set("key", t.apiKey)
+	body.Set("action", action)
+	body.Set("id", taskId)
+
+	fullURL := fmt.Sprintf("%s/res.php?%s", t.baseUrl, body.Encode())
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fullURL, nil)
+	if err != nil {
+		return err
 	}
+
+	resp, err := settings.client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	io.Copy(io.Discard, resp.Body)
+	resp.Body.Close()
+
+	return nil
 }
 
 var _ IProvider = (*WhiteCaptcha)(nil)

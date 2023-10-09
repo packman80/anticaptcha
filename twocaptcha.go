@@ -53,8 +53,6 @@ func (t *TwoCaptcha) SolveImageCaptcha(ctx context.Context, settings *Settings, 
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
@@ -73,8 +71,6 @@ func (t *TwoCaptcha) SolveRecaptchaV2(ctx context.Context, settings *Settings, p
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
@@ -98,8 +94,6 @@ func (t *TwoCaptcha) SolveRecaptchaV3(ctx context.Context, settings *Settings, p
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
@@ -130,8 +124,6 @@ func (t *TwoCaptcha) SolveTurnstile(ctx context.Context, settings *Settings, pay
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
@@ -147,8 +139,6 @@ func (t *TwoCaptcha) SolveCoordinates(ctx context.Context, settings *Settings, p
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
@@ -179,40 +169,30 @@ func (t *TwoCaptcha) SolveCustom(ctx context.Context, settings *Settings, payloa
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 
-func (t *TwoCaptcha) report(action, taskId string, settings *Settings) func(ctx context.Context) error {
+func (t *TwoCaptcha) Report(ctx context.Context, action, taskId string, settings *Settings) error {
+	body := url.Values{}
+	body.Set("key", t.apiKey)
+	body.Set("action", action)
+	body.Set("id", taskId)
 
-	return func(ctx context.Context) error {
-		body := url.Values{}
-		body.Set("key", t.apiKey)
-		body.Set("action", action)
-		body.Set("id", taskId)
-
-		fullURL := fmt.Sprintf("%s/res.php?%s", t.baseUrl, body.Encode())
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, fullURL, nil)
-		if err != nil {
-			return err
-		}
-
-		resp, err := settings.client.Do(req)
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-
-		respBody, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(string(respBody))
-
-		return nil
+	fullURL := fmt.Sprintf("%s/res.php?%s", t.baseUrl, body.Encode())
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fullURL, nil)
+	if err != nil {
+		return err
 	}
+
+	resp, err := settings.client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	io.Copy(io.Discard, resp.Body)
+	resp.Body.Close()
+
+	return nil
 }
 
 func (t *TwoCaptcha) solveTask(ctx context.Context, settings *Settings, task *url.Values) (*CaptchaResponse, error) {

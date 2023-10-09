@@ -53,8 +53,6 @@ func (a *AntiCaptcha) SolveImageCaptcha(ctx context.Context, settings *Settings,
 		return nil, err
 	}
 
-	result.reportBad = a.report("/reportIncorrectImageCaptcha", result.taskId, settings)
-	result.reportGood = a.report("/reportCorrectRecaptcha", result.taskId, settings)
 	return result, nil
 }
 
@@ -70,8 +68,6 @@ func (a *AntiCaptcha) SolveRecaptchaV2(ctx context.Context, settings *Settings, 
 		return nil, err
 	}
 
-	result.reportBad = a.report("/reportIncorrectRecaptcha", result.taskId, settings)
-	result.reportGood = a.report("/reportCorrectRecaptcha", result.taskId, settings)
 	return result, nil
 }
 
@@ -88,8 +84,6 @@ func (a *AntiCaptcha) SolveRecaptchaV3(ctx context.Context, settings *Settings, 
 		return nil, err
 	}
 
-	result.reportBad = a.report("/reportIncorrectRecaptcha", result.taskId, settings)
-	result.reportGood = a.report("/reportCorrectRecaptcha", result.taskId, settings)
 	return result, nil
 }
 
@@ -136,7 +130,6 @@ func (a *AntiCaptcha) SolveCoordinates(ctx context.Context, settings *Settings, 
 			return nil, err
 		}
 
-		result.reportBad = a.report("/reportIncorrectImageCaptcha", result.taskId, settings)
 	*/
 	return nil, fmt.Errorf("Coordinates Captcha doesn't support")
 }
