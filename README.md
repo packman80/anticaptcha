@@ -7,13 +7,15 @@ go get github.com/packman80/anticaptcha
 ```
 
 ## Support
-| Type          | 2Captcha | AntiCaptcha |
-|:--------------|:---------|:------------|
- | RecaptchaV2   | ✅        | ✅           |
- | RecaptchaV3   | ✅        | ✅           |
+| Type          | 2Captcha | AntiCaptcha | WC
+|:--------------|:---------|:------------|:------------|
+| RecaptchaV2   | ✅        | ✅           |
+| RecaptchaV3   | ✅        | ✅           |
 | Image Captcha | ✅        | ✅           |
 | HCaptcha      | ✅        | ✅           |
 | Turnstile     | ✅        | ✅           |
+| Coordinates   | ✅        | ✅           | ✅ 
+| Custom (any)  | ✅        | ✅           | ✅ 
 
 Software like XEVil and CapMonster are also supported. You can also implement your own provider by 
 using the `IProvider` interface.
