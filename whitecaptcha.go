@@ -178,7 +178,7 @@ func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, ta
 	}
 
 	if respJson.Status == 0 {
-		if respJson.ErrorText == "" || respJson.ErrorText == "Каптча в очереди распознавания" {
+		if respJson.Request == "CAPCHA_NOT_READY" {
 			return "", nil
 		}
 
