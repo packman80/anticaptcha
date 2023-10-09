@@ -108,8 +108,6 @@ func (t *TwoCaptcha) SolveHCaptcha(ctx context.Context, settings *Settings, payl
 		return nil, err
 	}
 
-	result.reportGood = t.report("reportgood", result.taskId, settings)
-	result.reportBad = t.report("reportbad", result.taskId, settings)
 	return result, nil
 }
 

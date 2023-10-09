@@ -281,7 +281,7 @@ func (a *AntiCaptcha) getTaskResult(ctx context.Context, settings *Settings, tas
 	return "", nil
 }
 
-func (a *AntiCaptcha) report(path, taskId string, settings *Settings) func(ctx context.Context) error {
+func (a *AntiCaptcha) Report(path, taskId string, settings *Settings) func(ctx context.Context) error {
 	type response struct {
 		ErrorID          int64  `json:"errorId"`
 		ErrorCode        string `json:"errorCode"`
