@@ -154,7 +154,7 @@ func (a *AntiCaptcha) solveTask(ctx context.Context, settings *Settings, task ma
 	}
 
 	for i := 0; i < settings.maxRetries; i++ {
-		answer, err := a.getTaskResult(ctx, settings, taskId)
+		answer, err := a.getResult(ctx, settings, taskId)
 		if err != nil {
 			return nil, err
 		}
@@ -222,7 +222,7 @@ func (a *AntiCaptcha) createTask(ctx context.Context, settings *Settings, task m
 	return "", errors.New("unexpected taskId type, expecting string or float64")
 }
 
-func (a *AntiCaptcha) getTaskResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
+func (a *AntiCaptcha) getResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
 	type antiCapSolution struct {
 		RecaptchaResponse string `json:"gRecaptchaResponse"`
 		Text              string `json:"text"`

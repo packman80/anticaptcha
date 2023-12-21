@@ -94,7 +94,7 @@ func (a *WhiteCaptcha) solveTask(ctx context.Context, settings *Settings, task m
 	}
 
 	for i := 0; i < settings.maxRetries; i++ {
-		answer, err := a.getTaskResult(ctx, settings, taskId)
+		answer, err := a.getResult(ctx, settings, taskId)
 		if err != nil {
 			return nil, err
 		}
@@ -142,13 +142,13 @@ func (a *WhiteCaptcha) createTask(ctx context.Context, settings *Settings, task 
 	}
 
 	if responseAsJSON.Status == 0 {
-		return "", fmt.Errorf("%v: %v", responseAsJSON.Request, responseAsJSON.ErrorText)
+		return "", fmt.Errorf("%v", responseAsJSON.Request)
 	}
 
 	return responseAsJSON.Request, nil
 }
 
-func (a *WhiteCaptcha) getTaskResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
+func (a *WhiteCaptcha) getResult(ctx context.Context, settings *Settings, taskId string) (string, error) {
 	body := &url.Values{}
 	body.Set("key", a.apiKey)
 	body.Set("json", "1")

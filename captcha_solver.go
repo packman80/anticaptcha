@@ -18,42 +18,22 @@ func NewCaptchaSolver(provider IProvider) *CaptchaSolver {
 	}
 }
 
-// SolveImageCaptcha uses the provider to fetch the solution of a captcha.
-//
-// The function returns ICaptchaResponse that has .Solution(), .ReportBad() and .ReportGood() that can be used
-// to get the answer or report the quality of the captcha to the provider.
 func (c *CaptchaSolver) SolveImageCaptcha(ctx context.Context, payload *ImageCaptchaPayload) (ICaptchaResponse, error) {
 	return c.provider.SolveImageCaptcha(ctx, c.settings, payload)
 }
 
-// SolveRecaptchaV2 uses the provider to fetch the solution of a captcha.
-//
-// The function returns ICaptchaResponse that has .Solution(), .ReportBad() and .ReportGood() that can be used
-// to get the answer or report the quality of the captcha to the provider.
 func (c *CaptchaSolver) SolveRecaptchaV2(ctx context.Context, payload *RecaptchaV2Payload) (ICaptchaResponse, error) {
 	return c.provider.SolveRecaptchaV2(ctx, c.settings, payload)
 }
 
-// SolveRecaptchaV3 uses the provider to fetch the solution of a captcha.
-//
-// The function returns ICaptchaResponse that has .Solution(), .ReportBad() and .ReportGood() that can be used
-// to get the answer or report the quality of the captcha to the provider.
 func (c *CaptchaSolver) SolveRecaptchaV3(ctx context.Context, payload *RecaptchaV3Payload) (ICaptchaResponse, error) {
 	return c.provider.SolveRecaptchaV3(ctx, c.settings, payload)
 }
 
-// SolveHCaptcha uses the provider to fetch the solution of a captcha.
-//
-// The function returns ICaptchaResponse that has .Solution(), .ReportBad() and .ReportGood() that can be used
-// to get the answer or report the quality of the captcha to the provider.
 func (c *CaptchaSolver) SolveHCaptcha(ctx context.Context, payload *HCaptchaPayload) (ICaptchaResponse, error) {
 	return c.provider.SolveHCaptcha(ctx, c.settings, payload)
 }
 
-// SolveTurnstile uses the provider to fetch the solution of a captcha.
-//
-// The function returns ICaptchaResponse that has .Solution(), .ReportBad() and .ReportGood() that can be used
-// to get the answer or report the quality of the captcha to the provider.
 func (c *CaptchaSolver) SolveTurnstile(ctx context.Context, payload *TurnstilePayload) (ICaptchaResponse, error) {
 	return c.provider.SolveTurnstile(ctx, c.settings, payload)
 }
